@@ -7,7 +7,6 @@ from models.stock import Stock
 
 class DataService:
     def save_portfolio_to_csv(self, portfolio: Portfolio, filename: str):
-        """Save portfolio to CSV file"""
         data = []
         total_value = 0
         
@@ -25,8 +24,7 @@ class DataService:
                 'Change %': stock.change_percent,
                 'Last Updated': stock.last_updated.strftime('%Y-%m-%d %H:%M:%S')
             })
-        
-        # Add total row
+    
         data.append({
             'Symbol': 'TOTAL',
             'Quantity': '',
@@ -42,7 +40,6 @@ class DataService:
         df.to_csv(filename, index=False)
     
     def load_portfolio_from_csv(self, filename: str) -> Optional[Portfolio]:
-        """Load portfolio from CSV file"""
         try:
             df = pd.read_csv(filename)
             portfolio = Portfolio()

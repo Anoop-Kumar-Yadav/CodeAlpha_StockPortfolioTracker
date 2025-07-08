@@ -6,13 +6,13 @@ class Portfolio:
         self.stocks: List[Stock] = []
     
     def add_stock(self, symbol: str, quantity: int, price: float):
-        # Check if stock already exists
+
         existing_stock = self.get_stock(symbol)
         if existing_stock:
-            # Update quantity
+
             existing_stock.quantity += quantity
         else:
-            # Add new stock
+
             stock = Stock(symbol, quantity, price)
             self.stocks.append(stock)
     

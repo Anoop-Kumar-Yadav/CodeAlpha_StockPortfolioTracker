@@ -5,12 +5,11 @@ import time
 class StockService:
     def __init__(self):
         self.cache = {}
-        self.cache_timeout = 60  # Cache for 1 minute
+        self.cache_timeout = 60  
     
     def get_stock_data(self, symbol: str) -> Optional[Dict]:
-        """Fetch stock data from Yahoo Finance"""
         try:
-            # Check cache first
+        
             cache_key = symbol.upper()
             current_time = time.time()
             
@@ -18,7 +17,7 @@ class StockService:
                 current_time - self.cache[cache_key]['timestamp'] < self.cache_timeout):
                 return self.cache[cache_key]['data']
             
-            # Fetch from yfinance
+            
             stock = yf.Ticker(symbol)
             info = stock.info
             hist = stock.history(period="2d")
@@ -28,7 +27,7 @@ class StockService:
             
             current_price = hist['Close'].iloc[-1]
             
-            # Calculate change
+           
             change = 0
             change_percent = 0
             if len(hist) > 1:
@@ -46,7 +45,7 @@ class StockService:
                 'volume': info.get('volume', 0)
             }
             
-            # Cache the data
+   
             self.cache[cache_key] = {
                 'data': stock_data,
                 'timestamp': current_time
@@ -59,7 +58,6 @@ class StockService:
             return None
     
     def get_multiple_stocks(self, symbols: List[str]) -> Dict[str, Optional[Dict]]:
-        """Fetch data for multiple stocks"""
         results = {}
         for symbol in symbols:
             results[symbol] = self.get_stock_data(symbol)

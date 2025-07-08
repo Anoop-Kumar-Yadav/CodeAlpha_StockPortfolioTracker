@@ -18,10 +18,6 @@ class StockDataFetcher(QThread):
         
     def run(self):
         try:
-            # Using Alpha Vantage free API (you'll need to get a free API key)
-            # Alternative: Using Yahoo Finance via yfinance library
-            
-            # Method 1: Using yfinance (install with: pip install yfinance)
             try:
                 import yfinance as yf
                 ticker = yf.Ticker(self.symbol)
@@ -46,11 +42,10 @@ class StockDataFetcher(QThread):
                 self.data_received.emit(data)
                 
             except ImportError:
-                # Method 2: Using Alpha Vantage API (free tier available)
-                # Get free API key from: https://www.alphavantage.co/support/#api-key
-                API_KEY = "GQ5DS63MNI7EZ9UD"  # Replace with your actual API key
+            
+                API_KEY = "GQ5DS63MNI7EZ9UD"  
                 
-                # Company overview
+              
                 overview_url = f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={self.symbol}&apikey={API_KEY}"
                 quote_url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={self.symbol}&apikey={API_KEY}"
                 
@@ -93,7 +88,7 @@ class AddStockDialog(QDialog):
         self.setModal(True)
         self.setFixedSize(600, 650)
         
-        # Set modern styling with better visibility
+      
         self.setStyleSheet("""
             QDialog {
                 background-color: #ffffff;
@@ -224,7 +219,7 @@ class AddStockDialog(QDialog):
             }
         """)
         
-        # Popular companies list
+    
         self.companies = {
             "Apple Inc.": "AAPL",
             "Microsoft Corporation": "MSFT",
@@ -268,7 +263,7 @@ class AddStockDialog(QDialog):
         main_layout.setSpacing(15)
         main_layout.setContentsMargins(20, 20, 20, 20)
         
-        # Title
+
         title_label = QLabel("Add Stock to Your Portfolio")
         title_label.setStyleSheet("""
             QLabel {
@@ -280,39 +275,38 @@ class AddStockDialog(QDialog):
         """)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(title_label)
-        
-        # Stock selection group
+    
         stock_group = QGroupBox("Stock Selection")
         stock_layout = QFormLayout()
         stock_layout.setSpacing(12)
         
-        # Company dropdown
+    
         self.company_combo = QComboBox()
         self.company_combo.setEditable(True)
         self.company_combo.setPlaceholderText("Search or select a company...")
         
-        # Add companies to dropdown
+   
         company_list = [""] + list(self.companies.keys())
         self.company_combo.addItems(company_list)
         
-        # Setup auto-completion
+      
         completer = QCompleter(company_list)
         completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         completer.setFilterMode(Qt.MatchFlag.MatchContains)
         self.company_combo.setCompleter(completer)
         
-        # Connect selection
+        
         self.company_combo.currentTextChanged.connect(self.on_company_selected)
         
         stock_layout.addRow("Company:", self.company_combo)
         
-        # Stock symbol
+  
         self.symbol_edit = QLineEdit()
         self.symbol_edit.setPlaceholderText("Enter stock symbol (e.g., AAPL)")
         self.symbol_edit.textChanged.connect(self.on_symbol_changed)
         stock_layout.addRow("Symbol:", self.symbol_edit)
         
-        # Progress bar for data fetching
+      
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
         stock_layout.addRow("", self.progress_bar)
@@ -320,7 +314,7 @@ class AddStockDialog(QDialog):
         stock_group.setLayout(stock_layout)
         main_layout.addWidget(stock_group)
         
-        # Company details group
+  
         details_group = QGroupBox("Company Details")
         details_layout = QVBoxLayout()
         
@@ -333,7 +327,7 @@ class AddStockDialog(QDialog):
         details_group.setLayout(details_layout)
         main_layout.addWidget(details_group)
         
-        # Quantity group
+   
         quantity_group = QGroupBox("Purchase Details")
         quantity_layout = QFormLayout()
         
@@ -344,7 +338,7 @@ class AddStockDialog(QDialog):
         self.quantity_spin.setSuffix(" shares")
         quantity_layout.addRow("Shares:", self.quantity_spin)
         
-        # Estimated value
+       
         self.estimated_value_label = QLabel("$0.00")
         self.estimated_value_label.setStyleSheet("""
             QLabel {
@@ -355,13 +349,13 @@ class AddStockDialog(QDialog):
         """)
         quantity_layout.addRow("Estimated Value:", self.estimated_value_label)
         
-        # Connect quantity change to update estimated value
+     
         self.quantity_spin.valueChanged.connect(self.update_estimated_value)
         
         quantity_group.setLayout(quantity_layout)
         main_layout.addWidget(quantity_group)
         
-        # Buttons
+       
         button_layout = QHBoxLayout()
         button_layout.setSpacing(10)
         
@@ -369,7 +363,7 @@ class AddStockDialog(QDialog):
         self.ok_button.setObjectName("addButton")
         self.ok_button.clicked.connect(self.accept)
         self.ok_button.setDefault(True)
-        self.ok_button.setEnabled(False)  # Disabled until valid stock is selected
+        self.ok_button.setEnabled(False)
         
         self.cancel_button = QPushButton("Cancel")
         self.cancel_button.setObjectName("cancelButton")
@@ -384,34 +378,31 @@ class AddStockDialog(QDialog):
         self.setLayout(main_layout)
     
     def on_company_selected(self, company_name):
-        """Handle company selection from dropdown"""
         if company_name in self.companies:
             symbol = self.companies[company_name]
             self.symbol_edit.setText(symbol)
             self.fetch_stock_data(symbol)
     
     def on_symbol_changed(self, symbol):
-        """Handle manual symbol entry"""
         if symbol and len(symbol) >= 2:
-            # Delay fetching to avoid too many API calls
+           
             if hasattr(self, 'fetch_timer'):
                 self.fetch_timer.stop()
             
             self.fetch_timer = QTimer()
             self.fetch_timer.setSingleShot(True)
             self.fetch_timer.timeout.connect(lambda: self.fetch_stock_data(symbol))
-            self.fetch_timer.start(1000)  # Wait 1 second after user stops typing
+            self.fetch_timer.start(1000)  
         else:
             self.details_text.setText("Enter a valid stock symbol...")
             self.ok_button.setEnabled(False)
     
     def fetch_stock_data(self, symbol):
-        """Fetch stock data in background thread"""
         if self.fetch_thread and self.fetch_thread.isRunning():
             self.fetch_thread.terminate()
         
         self.progress_bar.setVisible(True)
-        self.progress_bar.setRange(0, 0)  # Indeterminate progress
+        self.progress_bar.setRange(0, 0)  
         self.details_text.setText("Fetching company data...")
         
         self.fetch_thread = StockDataFetcher(symbol.upper())
@@ -420,11 +411,10 @@ class AddStockDialog(QDialog):
         self.fetch_thread.start()
     
     def on_data_received(self, data):
-        """Handle received stock data"""
         self.progress_bar.setVisible(False)
         self.current_stock_data = data
         
-        # Format company details
+     
         details = f"""
 <b>Company:</b> {data.get('name', 'N/A')}<br>
 <b>Symbol:</b> {data.get('symbol', 'N/A')}<br>
@@ -444,18 +434,16 @@ class AddStockDialog(QDialog):
         self.update_estimated_value()
     
     def on_error_occurred(self, error):
-        """Handle errors during data fetching"""
         self.progress_bar.setVisible(False)
         self.details_text.setText(f"Error fetching data: {error}")
         self.ok_button.setEnabled(False)
         
-        # Show error message
+        
         QMessageBox.warning(self, "Data Fetch Error", 
                           f"Could not fetch data for this stock:\n{error}\n\n"
                           "Please check the symbol and try again.")
     
     def format_market_cap(self, market_cap):
-        """Format market cap for display"""
         if market_cap == 'N/A' or not market_cap:
             return 'N/A'
         
@@ -473,7 +461,6 @@ class AddStockDialog(QDialog):
             return str(market_cap)
     
     def format_percentage(self, value):
-        """Format percentage for display"""
         if value == 'N/A' or not value:
             return 'N/A'
         
@@ -483,7 +470,6 @@ class AddStockDialog(QDialog):
             return str(value)
     
     def update_estimated_value(self):
-        """Update estimated value based on quantity and current price"""
         if self.current_stock_data and 'current_price' in self.current_stock_data:
             try:
                 price = float(self.current_stock_data['current_price'])
@@ -496,17 +482,14 @@ class AddStockDialog(QDialog):
             self.estimated_value_label.setText("$0.00")
     
     def get_data(self):
-        """Return the selected stock data"""
         symbol = self.symbol_edit.text().strip().upper()
         quantity = self.quantity_spin.value()
         return symbol, quantity
     
     def get_stock_details(self):
-        """Return complete stock details"""
         return self.current_stock_data
     
     def closeEvent(self, event):
-        """Clean up when dialog is closed"""
         if self.fetch_thread and self.fetch_thread.isRunning():
             self.fetch_thread.terminate()
         event.accept()
