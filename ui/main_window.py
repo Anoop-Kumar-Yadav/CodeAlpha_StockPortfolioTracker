@@ -167,7 +167,7 @@ class MainWindow(QMainWindow):
         
         header_layout = QHBoxLayout()
         
-        title_label = QLabel("🚀 Advanced Stock Portfolio Tracker Pro")
+        title_label = QLabel("Stock Portfolio Tracker BY ANOOP")
         title_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         title_label.setFont(QFont("Arial", 20, QFont.Weight.Bold))
         title_label.setStyleSheet("color: #2c3e50; padding: 10px;")
@@ -291,7 +291,7 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarNever)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         scroll_area.setMaximumHeight(100)
         
         scroll_widget = QWidget()
