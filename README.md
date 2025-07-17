@@ -28,29 +28,12 @@ The app provides a clean GUI where users can input stock symbols and quantities,
 
 ## 📸 Screenshots
 
-> *Add your screenshots here*
-> screenshots/001.png
-> screenshots/003.png
-> screenshots/005.png
-> screenshots/006.png
-> screenshots/992.png
-> screenshots/Thu 8_15 PM.svg
-
----
-
-## 🏗️ Folder Structure
-
-```
-stock_portfolio_tracker/
-├── main.py                     # Entry point
-├── gui/
-│   └── app.py                  # GUI + plotting + logic integration
-├── portfolio/
-│   ├── fetcher.py              # Live price fetching using yfinance
-│   ├── logic.py                # Investment calculator
-│   └── file_handler.py         # Save report to CSV
-└── reports/                    # CSV report output directory
-```
+> ![Screen 001](screenshots/001.png)
+> ![Screen 001](screenshots/003.png)
+> ![Screen 001](screenshots/005.png)
+> ![Screen 001](screenshots/006.png)
+> ![Screen 001](screenshots/992.png)
+> ![SVG UI View]screenshots/Thu 8_15 PM.svg
 
 ---
 
