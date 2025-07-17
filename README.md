@@ -33,7 +33,7 @@ The app provides a clean GUI where users can input stock symbols and quantities,
 > ![Screen 001](screenshots/005.png)
 > ![Screen 001](screenshots/006.png)
 > ![Screen 001](screenshots/992.png)
-> ![SVG UI View]screenshots/Thu 8_15 PM.svg
+> ![SVG UI View](screenshots/flow.svg)
 
 ---
 
